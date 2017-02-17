@@ -100,19 +100,21 @@ J = (1 / m) * sum(sum(cost)) + (lambda / (2 * m)) * (reg1 + reg2);
 delta1 = zeros(size(Theta1));
 delta2 = zeros(size(Theta2));
 
-for t = 1:m,
+for t = 1:m, %for each training data, perform the feed forward propogation, there are 5000 data set
 
-	h1t = h(t, :)';
-	a1t = a1(t,:)';
-	a2t = a2(t, :)';
-	yVect = yVec(t, :)';
+	h1t = h(t, :)'; #output layer
+	a1t = a1(t,:)';#input layer, come from the X
+  z2t = [1; Theta1 * a1t];
+  a2t = sigmoid(z2t);#output of hidden layer 
+  
+	yVect = yVec(t, :)';#target value of results
 
-	d3t = h1t - yVect;
-	z2t = [1; Theta1 * a1t];
-    d2t = Theta2' * d3t .* sigmoidGradient(z2t);
+	d3t = h1t - yVect; #"error" at output layer
+  d2t = Theta2' * d3t .* sigmoidGradient(z2t); #"error" at hidden layer
 
-    delta1 = delta1 + d2t(2:end) * a1t';
-    delta2 = delta2 + d3t * a2t';
+
+  delta2 = delta2 + d3t * a2t'; # delta for the hidden to output
+  delta1 = delta1 + d2t(2:end) * a1t'; # delta for the input to hidden
 end;
 
 Theta1_grad = (1 / m) * delta1;
