@@ -1,1 +1,1 @@
-#machine learning online courses
+# machine learning online courses and some useful materials
