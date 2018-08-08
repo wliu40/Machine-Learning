@@ -1,0 +1,12 @@
+Please use the link below to access the data files. The files will be used to answer the following questions below:
+
+
+
+Data Files- https://we.tl/grx7wryV6s
+
+
+
+Questions:
+1. Which 5 stocks have the highest volume of purchases?
+2. Which 5 stocks have been growing the fastest in purchase volume?
+3. Based on the data, what do you think drives a user to make a purchase? What would you recommend to the business to increase user purchases? What other data would you want?
