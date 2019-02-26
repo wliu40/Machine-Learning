@@ -320,3 +320,56 @@ image = preprocess_input(image)
 
 print(model.summary())
 
+#%%
+##########
+import glob
+import numpy as np
+from PIL import Image
+import cv2
+filelist = glob.glob('D:\DL\carnd_semantic_segmentation/data/train/x/*.png')
+filelist
+
+x = np.array([np.array(Image.open(fname)) for fname in filelist])
+
+x.shape
+
+datagen = ImageDataGenerator(
+    featurewise_center=True,
+    featurewise_std_normalization=True,
+    rotation_range=10,
+    width_shift_range=0.15,
+    height_shift_range=0.15,
+    horizontal_flip=True)
+
+seed = 122
+# compute quantities required for featurewise normalization
+# (std, mean, and principal components if ZCA whitening is applied)
+datagen.fit(x,augment=True, seed=seed)
+
+  
+
+
+cnt = 0
+
+for i in datagen.flow(x, batch_size=10):
+    print (cnt)
+    cnt +=1
+    print(x.shape)
+    if cnt > 5:
+        break
+    cnt2=0
+    for ii in i:
+        print (ii.shape)
+        cv2.imwrite('D:\DL\carnd_semantic_segmentation/data/train/x/'+str(cnt)+'_'+str(cnt2)+'.png', ii)
+        cnt2+=1
+
+
+# fits the model on batches with real-time data augmentation:
+
+
+model.fit_generator(datagen.flow(x_train, y_train,
+                                 batch_size=batch_size),
+                    epochs=epochs,
+                    steps_per_epoch=len(trainX) // BS,
+                    validation_data=(x_test, y_test),
+                    workers=4)
