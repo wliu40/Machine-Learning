@@ -1,0 +1,76 @@
+  
+class Box(object):
+    def __init__(self, x1, y1, x2, y2, ratio):
+        self.x1 = x1
+        self.x2 = x2
+        self.y1 = y1
+        self.y2 = y2
+        self.w = x2- x1
+        self.h = y2- y1
+        self.ratio = ratio
+        
+    def change(self, order):
+        if "u" in order:
+            self.y1 -= self.h*self.ratio
+        if "d" in order:
+            self.y2 += self.h*self.ratio
+        if "l" in order:
+            self.x1 -= self.w*self.ratio
+        if "r" in order:
+            self.x2 += self.w*self.ratio
+    
+    def raval(self):
+        return list(map(int, [self.x1, self.y1, self.x2, self.y2]))
+    
+    @classmethod
+    def mutate(cls, dic, orders, ratio):
+        """
+        dic is a coord dictionary, with keys: x1, y1, x2, y2.
+        (x1, y1) is the upper left corner corrd,
+        (x2, y2) is the lower right corner corrd.
+        """
+        res = []
+        for o in orders:
+            box = cls(dic['x1'], dic['y1'], dic['x2'], dic['y2'], ratio)
+            box.change(o)
+            res.append(box.raval())            
+        return res
+    
+        
+#%%
+import cv2
+import numpy as np
+
+#dic = {'x1':100, 'y1':200, 'x2': 300, 'y2':400}
+#ratio = .2
+#orders = ['lrud', 'lru', 'lrd', 'lud', 'rud', 'lr', 'ud']
+#orders = ['u']
+#
+#boxes = Box.mutate(dic, orders, ratio)
+#boxes
+#
+
+
+img = np.zeros([512, 512, 3])
+img += 255
+
+cv2.imwrite('img.png', img)
+
+x1, y1, x2, y2 = 100, 100, 300, 300
+
+cv2.rectangle(img, (x1, y1), (x2, y2), (0,0,0), 4)
+cv2.imwrite('img.png', img)
+
+
+dic = {'x1':x1, 'y1':y1, 'x2': x2, 'y2':y2}
+ratio = .2
+orders = ['lrud', 'lru', 'lrd', 'lud', 'rud', 'lr', 'ud']
+boxes = Box.mutate(dic, orders, ratio)
+boxes
+
+
+for i, (x1,y1,x2,y2) in enumerate(boxes):
+    color = [np.random.randint(0,255),  np.random.randint(0,255), np.random.randint(0,255)]
+    cv2.rectangle(img,(x1,y1),(x2,y2), color, 9-i)
+    cv2.imwrite("img_"+str(i)+'.png', img)
+    
